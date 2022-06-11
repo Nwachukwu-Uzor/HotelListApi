@@ -1,4 +1,5 @@
 using HotelListing.Data;
+using HotelListing.Services.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +13,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace HotelList.Api
@@ -33,6 +35,8 @@ namespace HotelList.Api
                     options.UseSqlServer(Configuration.GetConnectionString("sqlConnection"));
                 }
             );
+
+            services.AddAutoMapper(typeof(Mappings));
 
             services.AddCors(options =>
             {

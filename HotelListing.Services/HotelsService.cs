@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HotelListing.Domain.Contracts;
+using HotelListing.Services.Contracts;
 using HotelListing.Services.DTOs.Hotel;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace HotelListing.Services
 {
-    public class HotelsService
+    public class HotelsService : IHotelsService
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;

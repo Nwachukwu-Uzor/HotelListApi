@@ -59,6 +59,7 @@ namespace HotelList.Api
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICountriesService, CountriesService>();
+            services.AddScoped<IHotelsService, HotelsService>();
 
             services.AddControllers().AddNewtonsoftJson(opt => 
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore

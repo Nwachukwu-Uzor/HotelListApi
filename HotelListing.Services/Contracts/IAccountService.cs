@@ -10,6 +10,6 @@ namespace HotelListing.Services.Contracts
     public interface IAccountService
     {
         Task<bool> RegisterNewUser(UserDTO userDTO);
-        Task<bool> LoginUser(LoginDTO loginDTO);
+        //Task<bool> LoginUser(LoginDTO loginDTO);
     }
 }

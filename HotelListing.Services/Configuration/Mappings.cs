@@ -22,7 +22,9 @@ namespace HotelListing.Services.Configuration
             CreateMap<Hotel, HotelDTO>().ReverseMap();
             CreateMap<HotelCreateDTO, Hotel>().ReverseMap();
 
-            CreateMap<AppUser, UserDTO>().ReverseMap();
+            CreateMap<UserDTO, AppUser>()
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
+                .ReverseMap();
         }
     }
 }

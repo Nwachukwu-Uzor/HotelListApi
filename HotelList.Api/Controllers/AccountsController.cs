@@ -50,29 +50,29 @@ namespace HotelList.Api.Controllers
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //[HttpPost("login")]
+        //public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            try
-            {
-                var result = await _accountService.LoginUser(loginDTO);
+        //    try
+        //    {
+        //        var result = await _accountService.LoginUser(loginDTO);
 
-                if (!result)
-                {
-                    return Unauthorized(loginDTO);
-                }
+        //        if (!result)
+        //        {
+        //            return Unauthorized(loginDTO);
+        //        }
 
-                return Accepted();
-            } catch(Exception ex)
-            {
-                _logger.LogError(ex, $"Something went wrong in {nameof(Login)}");
-                return Problem($"Something went wrong in {nameof(Login)}", statusCode: 500);
-            }
-        }
+        //        return Accepted();
+        //    } catch(Exception ex)
+        //    {
+        //        _logger.LogError(ex, $"Something went wrong in {nameof(Login)}");
+        //        return Problem($"Something went wrong in {nameof(Login)}", statusCode: 500);
+        //    }
+        //}
     }
 }

@@ -1,4 +1,5 @@
 using HotelListing.Data;
+using HotelListing.Data.Configuration;
 using HotelListing.Data.Repositories;
 using HotelListing.Domain.Contracts;
 using HotelListing.Services;
@@ -41,6 +42,9 @@ namespace HotelList.Api
             );
 
             services.AddAutoMapper(typeof(Mappings));
+
+            services.AddAuthentication();
+            services.ConfigureIdentity();
 
             services.AddCors(options =>
             {

@@ -1,5 +1,9 @@
 using HotelListing.Data;
+using HotelListing.Data.Repositories;
+using HotelListing.Domain.Contracts;
+using HotelListing.Services;
 using HotelListing.Services.Configuration;
+using HotelListing.Services.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -53,7 +57,12 @@ namespace HotelList.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelList.Api", Version = "v1", Description = "<strong>An hotel listing site</strong>" });
             });
 
-            services.AddControllers();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ICountriesService, CountriesService>();
+
+            services.AddControllers().AddNewtonsoftJson(opt => 
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

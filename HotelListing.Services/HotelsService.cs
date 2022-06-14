@@ -25,7 +25,7 @@ namespace HotelListing.Services
         {
             try
             {
-                var hotels = await _unitOfWork.Hotels.GetAll();
+                var hotels = await _unitOfWork.Hotels.GetAll(null, null, new List<string> { "Country" });
 
                 return _mapper.Map<IList<HotelDTO>>(hotels);
             } catch(Exception)

@@ -28,6 +28,20 @@ namespace HotelListing.Services
             var user = _mapper.Map<AppUser>(userDTO);
             var result = await _userManager.CreateAsync(user, userDTO.Password);
 
+            if (!result.Succeeded)
+            {
+                var errorMessage = new StringBuilder();
+
+                foreach(var error in result.Errors)
+                {
+                    errorMessage.AppendLine($"{error.Code}: {error.Description}");
+                }
+
+                throw new ArgumentException(errorMessage.ToString());
+            }
+
+            await _userManager.AddToRolesAsync(user, userDTO.Roles);
+
             return result.Succeeded;
         }
 

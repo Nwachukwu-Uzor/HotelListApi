@@ -56,19 +56,52 @@ namespace HotelList.Api
                 });
             });
 
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelList.Api", Version = "v1", Description = "<strong>An hotel listing site</strong>" });
-            });
+            AddSwaggerDoc(services);
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<ICountriesService, CountriesService>();
             services.AddScoped<IHotelsService, HotelsService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IAuthManager, AuthManager>();
+            services.ConfigureJwt(Configuration);
 
             services.AddControllers().AddNewtonsoftJson(opt => 
                 opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+        }
+
+        private void AddSwaggerDoc(IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+                    Description = @"JWT authorization header using the Bearer scheme
+                                    Enter 'Bearer' [space] and the your token in the text input below
+                                    Example: 'Bearer 123456677db",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement() {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "0auth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
+                        },
+                        new List<string>()
+                    }
+                });
+
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelList.Api", Version = "v1", Description = "<strong>An hotel listing site</strong>" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -87,6 +120,7 @@ namespace HotelList.Api
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -13,5 +13,8 @@ namespace HotelListing.Services.DTOs.Users
         public string LastName { get; set; }
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
+
+        [Required]
+        public List<string> Roles { get; set; }
     }
 }

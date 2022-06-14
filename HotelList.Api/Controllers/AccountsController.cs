@@ -16,11 +16,13 @@ namespace HotelList.Api.Controllers
     {
         private readonly ILogger<AccountsController> _logger;
         private readonly IAccountService _accountService;
+        private readonly IAuthManager _authManager;
 
-        public AccountsController(IAccountService accountService, ILogger<AccountsController> logger)
+        public AccountsController(IAccountService accountService, ILogger<AccountsController> logger, IAuthManager authManager)
         {
             _accountService = accountService;
             _logger = logger;
+            _authManager = authManager;
         }
 
         [HttpPost("register")]
@@ -39,40 +41,41 @@ namespace HotelList.Api.Controllers
 
                 if (!success)
                 {
-                    return BadRequest("Login attempt failed");
+                    return BadRequest("Registration attempt failed attempt failed");
                 }
 
                 return Accepted();
             } catch(Exception ex)
             {
                 _logger.LogError(ex, $"Something went wrong in {nameof(Register)}");
-                return Problem($"Something went wrong in {nameof(Register)}", statusCode: 500);
+                return Problem(ex.Message, statusCode: 500);
             }
         }
 
-        //[HttpPost("login")]
-        //public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return BadRequest(ModelState);
-        //    }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginDTO loginDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-        //    try
-        //    {
-        //        var result = await _accountService.LoginUser(loginDTO);
+            try
+            {
+                var result = await _authManager.ValidateUser(loginDTO);
 
-        //        if (!result)
-        //        {
-        //            return Unauthorized(loginDTO);
-        //        }
+                if (!result)
+                {
+                    return Unauthorized(loginDTO);
+                }
 
-        //        return Accepted();
-        //    } catch(Exception ex)
-        //    {
-        //        _logger.LogError(ex, $"Something went wrong in {nameof(Login)}");
-        //        return Problem($"Something went wrong in {nameof(Login)}", statusCode: 500);
-        //    }
-        //}
+                return Accepted(new { Token = await _authManager.CreateToken()});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Something went wrong in {nameof(Login)}");
+                return Problem($"Something went wrong in {nameof(Login)}", statusCode: 500);
+            }
+        }
     }
 }
